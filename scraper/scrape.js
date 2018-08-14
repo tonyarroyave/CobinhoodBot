@@ -12,9 +12,9 @@ var today = new Date();
 
 const dates = {
 	from: {
-		year: 2011,
-		month: 9,
-		day: 14
+		year: today.getFullYear() - 5,
+		month: today.getMonth() + 1,
+		day: today.getDate()
 	},
 
 	to: {
@@ -32,10 +32,11 @@ const formatApiUrl = (market, date) => {
 	return apiUrl
 }
 
-console.log(chalk.green(figlet.textSync('Bitcoin Chart Scraper', {
+/*console.log(chalk.green(figlet.textSync('Bitcoin Chart Scraper', {
 	font: 'Pepper',
 	kerning: 'fitted'
-})))
+})))*/
+
 console.log(chalk.dim(`Running with maxstreams=${chalk.yellow(maxstreams)} \n`))
 
 const url = (baseurl, date) => {

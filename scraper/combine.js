@@ -4,13 +4,16 @@ const path = require('path')
 const chalk = require('chalk')
 const figlet = require('figlet')
 
-const outputFile = process.argv.slice(2)[0]
-const dataDir = __dirname + '/../data/'
+const outputFile = path.join(__dirname, '/../data/bitcoin-history.json')
+const dataDir = path.join(__dirname, '/../data/')
 
-console.log(chalk.green(figlet.textSync('Bitcoin Chart Scraper', {
+//console.log(chalk.dim(`dataDir=${chalk.yellow(dataDir)} \n`))
+
+/*console.log(chalk.green(figlet.textSync('Bitcoin Chart Scraper', {
 	font: 'Pepper',
 	kerning: 'fitted'
-})))
+})))*/
+
 console.log(chalk.dim(`Combining data to=${chalk.yellow(outputFile)} \n`))
 
 const files = []
@@ -58,7 +61,7 @@ fs.readdir(dataDir, (err, list) => {
 
 	files.forEach(day => {
 		const filePath = path.join(dataDir, day.file)
-		const contents = fs.readFileSync(path.join(__dirname, filePath)).toString()
+		const contents = fs.readFileSync(filePath).toString()
 		const data = JSON.parse(contents)
 
 		if (data.length > 0) {

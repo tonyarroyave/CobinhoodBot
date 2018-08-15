@@ -48,7 +48,7 @@ df = pd.DataFrame(columns=['Timestamp', 'Open', 'High', 'Low', 'Close',
 
 df['Timestamp'] = df['Timestamp'].map(lambda x: dt_func(x))
 
-df['Average'] = (df['High']+df['Low'])/2
+df['Average'] = (df['High']+df['Low']+df['Open']+df['Close'])/4
 df['Date'] = pd.to_datetime(df['Timestamp'])
 
 with pd.option_context('mode.use_inf_as_null', True):

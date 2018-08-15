@@ -11,9 +11,9 @@ import pandas as pd
 from Naked.toolshed.shell import execute_js
 import warnings
 
-warnings.filterwarnings("ignore", message="numpy.dtype size changed")
+warnings.filterwarnings("ignore")
 
-Testing = False
+Testing = True
 
 # scraper.js execution
 if Testing:

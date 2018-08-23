@@ -9,7 +9,8 @@
   "dependencies": {
     "chalk": "^2.1.0",
     "figlet": "^1.2.0",
-    "get-json": "0.0.2"
+    "get-json": "0.0.2",
+    "underscore": "^1.9.1"
   },
   "repository": {
     "type": "git",

@@ -4,15 +4,9 @@ const path = require('path')
 const chalk = require('chalk')
 const figlet = require('figlet')
 
-const outputFile = path.join(__dirname, '/../data/bitcoin-history.json')
+const outputFile = path.join(__dirname, '/../data/combined-data/bitcoin-history.json')
 const dataDir = path.join(__dirname, '/../data/')
 
-//console.log(chalk.dim(`dataDir=${chalk.yellow(dataDir)} \n`))
-
-/*console.log(chalk.green(figlet.textSync('Bitcoin Chart Scraper', {
-	font: 'Pepper',
-	kerning: 'fitted'
-})))*/
 
 console.log(chalk.dim(`Combining data to=${chalk.yellow(outputFile)} \n`))
 

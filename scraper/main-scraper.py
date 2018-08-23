@@ -35,9 +35,9 @@ def dt_func(seconds):
 
 
 the_path = os.getcwd()
-data_path = os.path.join(the_path, '../data/')
+comb_data_path = os.path.join(the_path, '../data/combined-data/')
 file_name = 'bitcoin-history.json'
-file_path = data_path + file_name
+file_path = comb_data_path + file_name
 with open(file_path, 'r') as handle:
     parsed = json.load(handle)
 
@@ -58,5 +58,6 @@ with pd.option_context('mode.use_inf_as_null', True):
 print('Saving CSV...')
 
 new_df = df[['Date', 'Average']].copy()
-new_df.to_csv(data_path + 'processed-data/processed.csv')
+new_df.to_csv(os.path.join(the_path, '../data/') +
+              'processed-data/processed.csv')
 print('DONE!')

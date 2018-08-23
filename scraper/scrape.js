@@ -3,6 +3,7 @@ const fs = require('fs')
 const path = require('path')
 const chalk = require('chalk')
 const figlet = require('figlet')
+const _ = require('underscore')
 
 const maxstreams = 8
 const dataDir = __dirname + '/../data'
@@ -32,11 +33,6 @@ const formatApiUrl = (market, date) => {
 	return apiUrl
 }
 
-/*console.log(chalk.green(figlet.textSync('Bitcoin Chart Scraper', {
-	font: 'Pepper',
-	kerning: 'fitted'
-})))*/
-
 console.log(chalk.dim(`Running with maxstreams=${chalk.yellow(maxstreams)} \n`))
 
 const url = (baseurl, date) => {
@@ -63,6 +59,51 @@ const start = new Date(dates.from.year, dates.from.month - 1, dates.from.day)
 const end = new Date(dates.to.year, dates.to.month - 1, dates.to.day)
 const dateStack = getDates(start, end)
 
+// Return only base file name without dir
+function getLatestFile(dirpath) {
+
+	// Check if dirpath exist or not right here
+
+	let latest;
+
+	const files = fs.readdirSync(dirpath);
+	files.forEach(filename => {
+		// Get the stat
+		const stat = fs.lstatSync(path.join(dirpath, filename));
+		// Pass if it is a directory
+		if (stat.isDirectory())
+			return;
+
+		// latest default to first file
+		if (!latest) {
+			latest = { filename, mtime: stat.mtime };
+			return;
+		}
+		// update latest if mtime is greater than the current latest
+		if (stat.mtime > latest.mtime) {
+			latest.filename = filename;
+			latest.mtime = stat.mtime;
+		}
+	});
+
+	return latest.filename;
+}
+
+console.log(`Deleting lastest files`)
+
+for (let i = 0; i < maxstreams; i += 1) {
+	var delfileName = getLatestFile(dataDir)
+	var delfilePath = path.join(dataDir, delfileName)
+
+	// Let's delete the last saved file
+	if (fs.existsSync(delfilePath)) {
+		fs.unlinkSync(delfilePath, (err) => {
+			if (err) throw err;
+			console.log(`${chalk.white(delfileName)} deleted`);
+		});
+	}
+}
+
 const go = () => new Promise((resolve, reject) => {
 	if (dateStack.length === 0) {
 		return resolve('Done!')
@@ -82,7 +123,6 @@ const go = () => new Promise((resolve, reject) => {
 		const fileName = `${market}-${prettyDate}.json`
 		const filePath = path.join(dataDir, fileName)
 
-		// Don't re-download if thie file already exists
 		if (fs.existsSync(filePath)) {
 			console.log(`Passover: ${chalk.magenta(filePath)} (already exists)`)
 			continue

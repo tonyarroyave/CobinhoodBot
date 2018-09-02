@@ -2,3 +2,6 @@
 /data
 .ipynb_checkpoints
 */.ipynb_checkpoints/*
+#not neccesary
+__pycache__
+cup_holder.json

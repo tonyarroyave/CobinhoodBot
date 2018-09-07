@@ -22,7 +22,7 @@ const dates = {
 	to: {
 		year: today.getFullYear(),
 		month: today.getMonth() + 1,
-		day: today.getDate() - 1,
+		day: today.getDate() + 1,
 	},
 }
 
@@ -180,7 +180,7 @@ const go = () => new Promise((resolve, reject) => {
 
 function go_today() {
 
-	const prettyDate = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate()
+	const prettyDate = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + (today.getDate() + 1)
 	const start = new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime()
 	const dataPath = formatApiUrl(market, today.getTime(), start)
 	const fileName = `${market}-${prettyDate}.json`

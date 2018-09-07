@@ -53,5 +53,5 @@ else:
 
 # Rewrite the cup holder file
 
-with open('cup_holder.json', 'w') as outfile:
+with open(cup, 'w') as outfile:
     json.dump(holder, outfile)

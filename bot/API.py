@@ -8,6 +8,14 @@ cob = Cobinhood(API_TOKEN=API_KEY)
 basic_trading_pairs_ids = ["BTC-USDT"]   # this should grow with time
 
 
+def get_USDT_balance():
+    balances = cob.wallet.get_balances()
+    if (balances['success'] == True):
+        print(balances['result']['balances'])
+    else:
+        raise Exception('Could not get balances!')
+
+
 def get_price_in_USDT(coin):
     '''
     Coin name must be it's acronym in a String format

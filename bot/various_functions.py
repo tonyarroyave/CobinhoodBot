@@ -5,6 +5,16 @@ import numpy as np
 import json
 
 
+def log_balances(BTC, USDT):
+    j = 'balance.json'
+    with open(j) as f:
+        balances = json.load(f)
+    balances['Actual-BTC'] = BTC
+    balances['Actual-USDT'] = USDT
+    with open(j, 'w') as outfile:
+        json.dump(balances, outfile)
+
+
 def log_row_parameters(data=[]):
     import csv
     import datetime

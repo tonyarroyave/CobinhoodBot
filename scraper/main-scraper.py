@@ -12,14 +12,14 @@ from Naked.toolshed.shell import execute_js
 import warnings
 
 warnings.filterwarnings("ignore")
-
+Trading_ID = "BTC-USDT"
 Testing = True
 
 # scraper.js execution
 if Testing:
-    success_scraper = execute_js('scrape.js')
+    success_scraper = execute_js('scrape_hood.js', arguments=Trading_ID)
     if success_scraper:
-        success_combine = execute_js('combine.js')
+        success_combine = execute_js('combine_hood.js', arguments=Trading_ID)
         if not success_combine:
             print('Error executing combine.js')
             raise Error('combine.js')
@@ -36,7 +36,7 @@ def dt_func(seconds):
 
 the_path = os.getcwd()
 comb_data_path = os.path.join(the_path, '../data/combined-data/')
-file_name = 'bitcoin-history.json'
+file_name = 'Cobinhood-' + Trading_ID + '.json'
 file_path = comb_data_path + file_name
 with open(file_path, 'r') as handle:
     parsed = json.load(handle)
@@ -59,5 +59,5 @@ print('Saving CSV...')
 
 new_df = df[['Date', 'Average']].copy()
 new_df.to_csv(os.path.join(the_path, '../data/') +
-              'processed-data/processed.csv')
+              'processed-data/' + Trading_ID + '-processed.csv')
 print('DONE!')

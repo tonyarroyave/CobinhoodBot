@@ -16,7 +16,7 @@ const dates = {
 	from: {					// No data before this day
 		year: 2018,
 		month: 2,
-		day: 23
+		day: 24
 	},
 
 	to: {

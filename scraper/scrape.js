@@ -89,19 +89,38 @@ function getLatestFile(dirpath) {
 	return latest.filename;
 }
 
+function isDirEmpty(dirpath) {
+	logic = false
+	fs.readdir(dirpath, function (err, files) {
+		if (err) {
+			// some sort of error
+		} else {
+			if (!files.length) {
+				logic = true
+			}
+		}
+	});
+	return logic
+}
+
 console.log(`Deleting lastest files`)
 
-for (let i = 0; i < maxstreams; i += 1) {
-	var delfileName = getLatestFile(dataDir)
-	var delfilePath = path.join(dataDir, delfileName)
+if (!isDirEmpty(dataDir)) {
+	for (let i = 0; i < maxstreams; i += 1) {
+		var delfileName = getLatestFile(dataDir)
+		var delfilePath = path.join(dataDir, delfileName)
 
-	// Let's delete the last saved file
-	if (fs.existsSync(delfilePath)) {
-		fs.unlinkSync(delfilePath, (err) => {
-			if (err) throw err;
-			console.log(`${chalk.white(delfileName)} deleted`);
-		});
+		// Let's delete the last saved file
+		if (fs.existsSync(delfilePath)) {
+			fs.unlinkSync(delfilePath, (err) => {
+				if (err) throw err;
+				console.log(`${chalk.white(delfileName)} deleted`);
+			});
+		}
 	}
+}
+else {
+	console.log(`Directory is Empty`)
 }
 
 const go = () => new Promise((resolve, reject) => {

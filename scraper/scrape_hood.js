@@ -60,6 +60,24 @@ const start = new Date(dates.from.year, dates.from.month - 1, dates.from.day)
 const end = new Date(dates.to.year, dates.to.month - 1, dates.to.day)
 const dateStack = getDates(start, end)
 
+function isDirEmpty(dirpath) {
+	logic = true
+	fs.readdir(dirpath, function (err, files) {
+		if (err) {
+		} else {
+			files.forEach(filename => {
+				const stat = fs.lstatSync(path.join(dirpath, filename));
+				if (stat.isDirectory())
+					return;
+				else {
+					logic = false
+				}
+			})
+		}
+	});
+	return logic
+}
+
 // Return only base file name without dir
 function getLatestFile(dirpath) {
 
@@ -87,7 +105,9 @@ function getLatestFile(dirpath) {
 		}
 	});
 
-	return latest.filename;
+	if (latest != null) {
+		return latest.filename;
+	}
 }
 
 function format_data(candles) {
@@ -101,17 +121,22 @@ function format_data(candles) {
 
 console.log(`Deleting lastest files\n`);
 
-for (let i = 0; i < maxstreams + 1; i += 1) {
-	var delfileName = getLatestFile(dataDir);
-	var delfilePath = path.join(dataDir, delfileName);
+if (!isDirEmpty(dataDir)) {
+	for (let i = 0; i < maxstreams + 1; i += 1) {
+		var delfileName = getLatestFile(dataDir);
+		var delfilePath = path.join(dataDir, delfileName);
 
-	// Let's delete the last saved file
-	if (fs.existsSync(delfilePath)) {
-		fs.unlinkSync(delfilePath, (err) => {
-			if (err) throw err;
-			console.log(`${chalk.white(delfileName)} deleted`);
-		});
+		// Let's delete the last saved file
+		if (fs.existsSync(delfilePath)) {
+			fs.unlinkSync(delfilePath, (err) => {
+				if (err) throw err;
+				console.log(`${chalk.white(delfileName)} deleted`);
+			});
+		}
 	}
+}
+else {
+	console.log(`Directory is Empty\n`)
 }
 
 const go = () => new Promise((resolve, reject) => {

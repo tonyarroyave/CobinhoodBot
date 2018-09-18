@@ -4,3 +4,5 @@
 */.ipynb_checkpoints/*
 #not neccesary
 __pycache__
+*.swp
+*.swo

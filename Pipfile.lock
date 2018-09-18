@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "745633ed0001c319902c5d229f548de398c83ee574eeceb09846873e92feb3a4"
+            "sha256": "49539842bb665e27b47a25c91d581be6e30f563488c11f6e5705d9add178786e"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -104,6 +104,10 @@
             ],
             "index": "pypi",
             "version": "==0.23.4"
+        },
+        "python-cobinhood-0.1": {
+            "git": "https://github.com/CliffLin/python-cobinhood",
+            "ref": "ff22244590495e75dd9bec2c20354f8534052a7e"
         },
         "python-dateutil": {
             "hashes": [

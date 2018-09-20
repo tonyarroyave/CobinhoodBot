@@ -16,7 +16,7 @@ const dates = {
 	from: {					// No data before this day
 		year: 2018,
 		month: 2,
-		day: 23
+		day: 24
 	},
 
 	to: {
@@ -59,6 +59,21 @@ const get_24h = (day) => {
 const start = new Date(dates.from.year, dates.from.month - 1, dates.from.day)
 const end = new Date(dates.to.year, dates.to.month - 1, dates.to.day)
 const dateStack = getDates(start, end)
+var logic = false
+
+function isDirEmpty(dirpath, callback) {
+	logic = true;
+	files = fs.readdirSync(dirpath);
+	files.forEach(filename => {
+		const stat = fs.lstatSync(path.join(dirpath, filename));
+		if (stat.isDirectory()) {
+			// nothing
+		} else {
+			logic = false;
+		}
+	})
+	callback();
+}
 
 // Return only base file name without dir
 function getLatestFile(dirpath) {
@@ -87,7 +102,9 @@ function getLatestFile(dirpath) {
 		}
 	});
 
-	return latest.filename;
+	if (latest != null) {
+		return latest.filename;
+	}
 }
 
 function format_data(candles) {
@@ -99,84 +116,21 @@ function format_data(candles) {
 	return dataparsed
 }
 
-console.log(`Deleting lastest files\n`);
+function delete_files(callback) {
+	for (let i = 0; i < maxstreams + 1; i += 1) {
+		var delfileName = getLatestFile(dataDir);
+		var delfilePath = path.join(dataDir, delfileName);
 
-for (let i = 0; i < maxstreams + 1; i += 1) {
-	var delfileName = getLatestFile(dataDir);
-	var delfilePath = path.join(dataDir, delfileName);
-
-	// Let's delete the last saved file
-	if (fs.existsSync(delfilePath)) {
-		fs.unlinkSync(delfilePath, (err) => {
-			if (err) throw err;
-			console.log(`${chalk.white(delfileName)} deleted`);
-		});
+		// Let's delete the last saved file
+		if (fs.existsSync(delfilePath)) {
+			fs.unlinkSync(delfilePath, (err) => {
+				if (err) throw err;
+				console.log(`${chalk.white(delfileName)} deleted`);
+			});
+		}
 	}
+	callback();
 }
-
-const go = () => new Promise((resolve, reject) => {
-	if (dateStack.length === 0) {
-		return resolve('Done!')
-	}
-
-	const pipeline = []
-
-	for (let i = 0; i < maxstreams; i += 1) {
-		const date = dateStack.shift()
-
-		if (!date) {
-			continue
-		}
-
-		const prettyDate = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
-		const start = get_24h(date)
-		const dataPath = formatApiUrl(market, date.getTime(), start)
-		const fileName = `${market}-${prettyDate}.json`
-		const filePath = path.join(dataDir, fileName)
-
-		if (fs.existsSync(filePath)) {
-			console.log(`Passover: ${chalk.magenta(filePath)} (already exists)`)
-			continue
-		}
-
-		pipeline.push(new Promise((resolve, reject) => {
-			console.log(`Fetching: ${chalk.yellow(prettyDate)} - ${chalk.yellow.dim(dataPath)}`)
-
-			getJSON(dataPath, (error, response) => {
-				let cursoryUsd = null
-
-				if (response["success"] === true) {
-					real_data = response.result.candles
-					cursoryUsd = real_data[0].close
-					console.log(`Recevied: ${chalk.green(prettyDate)} - ${chalk.red('$' + cursoryUsd)}`)
-				}
-
-				if (response["success"] === false) {
-					console.log(chalk.red(`Received "Undefined" data for ${chalk.white(prettyDate)}. Too many streams? (Data for one dates are not available, eg: '2011-10-1')`))
-					response = []
-				}
-
-				var parsed_data = format_data(real_data)
-				const output = JSON.stringify(parsed_data)
-
-				fs.writeFile(filePath, output, 'utf8', err => {
-					if (err) {
-						return reject(err)
-					} else {
-						console.log(`Saved to: ${chalk.blue(filePath)}`)
-						resolve('Ok')
-					}
-				})
-			})
-		}))
-	}
-
-	Promise.all(pipeline).then(() => {
-		resolve(go())
-	}).catch(err => {
-		reject(err)
-	})
-})
 
 function go_today() {
 
@@ -220,14 +174,92 @@ function go_today() {
 			}
 		})
 	})
+	console.log(chalk.red('Done with todays data'));
 }
 
-go().then(() => {
-	console.log(chalk.magenta('Done with historical data'))
-}).catch(err => {
-	console.error(err)
-})
+function inicio(callback) {
+	isDirEmpty(dataDir, function () {
+		if (logic == false) {
+			console.log(chalk.yellow('Deleting last files...'))
+			delete_files(function () {
+				console.log(chalk.yellow('Done deleting last files'))
+			});
+		}
+	});
+	callback();
+}
 
-go_today();
-console.log(chalk.magenta('Done with todays data'));
+function despues() {
+	const go = () => new Promise((resolve, reject) => {
+		if (dateStack.length === 0) {
+			return resolve('Done!')
+		}
 
+		const pipeline = []
+
+		for (let i = 0; i < maxstreams; i += 1) {
+			const date = dateStack.shift()
+
+			if (!date) {
+				continue
+			}
+
+			const prettyDate = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
+			const start = get_24h(date)
+			const dataPath = formatApiUrl(market, date.getTime(), start)
+			const fileName = `${market}-${prettyDate}.json`
+			const filePath = path.join(dataDir, fileName)
+
+			if (fs.existsSync(filePath)) {
+				console.log(`Passover: ${chalk.magenta(filePath)} (already exists)`)
+				continue
+			}
+
+			pipeline.push(new Promise((resolve, reject) => {
+				console.log(`Fetching: ${chalk.yellow(prettyDate)} - ${chalk.yellow.dim(dataPath)}`)
+
+				getJSON(dataPath, (error, response) => {
+					let cursoryUsd = null
+
+					if (response["success"] === true) {
+						real_data = response.result.candles
+						cursoryUsd = real_data[0].close
+						console.log(`Recevied: ${chalk.green(prettyDate)} - ${chalk.red('$' + cursoryUsd)}`)
+					}
+
+					if (response["success"] === false) {
+						console.log(chalk.red(`Received "Undefined" data for ${chalk.white(prettyDate)}. Too many streams? (Data for one dates are not available, eg: '2011-10-1')`))
+						response = []
+					}
+
+					var parsed_data = format_data(real_data)
+					const output = JSON.stringify(parsed_data)
+
+					fs.writeFile(filePath, output, 'utf8', err => {
+						if (err) {
+							return reject(err)
+						} else {
+							console.log(`Saved to: ${chalk.blue(filePath)}`)
+							resolve('Ok')
+						}
+					})
+				})
+			}))
+		}
+
+		Promise.all(pipeline).then(() => {
+			resolve(go())
+		}).catch(err => {
+			reject(err)
+		})
+	})
+	go().then(() => {
+		console.log(chalk.red('Done with historical data'))
+	}).catch(err => {
+		console.error(err)
+	})
+	go_today();
+}
+
+console.log(chalk.yellow('Antes de inicio'));
+inicio(despues);

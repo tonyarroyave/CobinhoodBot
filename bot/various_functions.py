@@ -32,6 +32,23 @@ def log_row_parameters(data=[]):
                          'PM2': data[1], 'Score': data[2]})
 
 
+def log_order(data=[]):
+    import csv
+
+    the_path = os.getcwd()
+    comb_data_path = os.path.join(the_path, './log/')
+    file_name = 'orders_log' + '.csv'
+    file_path = comb_data_path + file_name
+    fieldnames = ['id', 'trading-pair', 'side',
+                  'type', 'price', 'size', 'timestamp']
+    with open(file_path, 'a', newline='') as csvfile:
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+        writer.writerow({'id': data[0], 'trading-pair': data[1],
+                         'side': data[2], 'type': data[3],
+                         'price': data[4], 'size': data[5],
+                         'timestamp': data[6]})
+
+
 def get_PMs():
 
     with open('parameters.json') as f:

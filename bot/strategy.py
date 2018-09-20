@@ -25,7 +25,7 @@ PM1, PM2 = vf.get_PMs()
 strategy = get_strategy(PM1, PM2, vf.get_df())
 if (strategy == 1):
     holder["strategy"] = "long"
-elif (strategy == 0):
+elif (strategy == -1):
     holder["strategy"] = "short"
 
 with open(cup, 'w') as outfile:

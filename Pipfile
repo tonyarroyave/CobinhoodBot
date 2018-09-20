@@ -1,0 +1,16 @@
+[[source]]
+verify_ssl = true
+name = "pypi"
+url = "https://pypi.org/simple"
+
+[packages]
+requests = "*"
+numpy = "*"
+pandas = "*"
+naked = "*"
+"python-cobinhood-0.1" = {git = "https://github.com/CliffLin/python-cobinhood"}
+
+[requires]
+python_version = "3.5"
+
+[dev-packages]

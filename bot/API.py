@@ -134,9 +134,9 @@ def place_market_sell(pair_id, quantity):
         "trading_pair_id": pair_id,
         "side": "ask",
         "type": "market",
-        "size": quantity
+        "size": str(quantity)
     }
-    return cob.trade.post_orders(data)
+    return cob.trading.post_orders(data)
 
 
 def place_market_buy(pair_id, quantity):
@@ -147,9 +147,9 @@ def place_market_buy(pair_id, quantity):
         "trading_pair_id": pair_id,
         "side": "bid",
         "type": "market",
-        "size": quantity
+        "size": str(quantity)
     }
-    return cob.trade.post_orders(data)
+    return cob.trading.post_orders(data)
 
 
 def place_limit_sell(pair_id, quantity, price):
@@ -161,9 +161,9 @@ def place_limit_sell(pair_id, quantity, price):
         "side": "ask",
         "type": "limit",
         "price": price,
-        "size": quantity
+        "size": str(quantity)
     }
-    return cob.trade.post_orders(data)
+    return cob.trading.post_orders(data)
 
 
 def place_limit_buy(pair_id, quantity, price):
@@ -175,6 +175,6 @@ def place_limit_buy(pair_id, quantity, price):
         "side": "bid",
         "type": "limit",
         "price": price,
-        "size": quantity
+        "size": str(quantity)
     }
-    return cob.trade.post_orders(data)
+    return cob.trading.post_orders(data)

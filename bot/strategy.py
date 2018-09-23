@@ -25,8 +25,9 @@ PM1, PM2 = vf.get_PMs()
 strategy = get_strategy(PM1, PM2, vf.get_df())
 if (strategy == 1):
     holder["strategy"] = "long"
+    print("So the strategy is {}, it means 'Long'".format(strategy))
 elif (strategy == -1):
     holder["strategy"] = "short"
-
+    print("So the strategy is {}, it means 'Short'".format(strategy))
 with open(cup, 'w') as outfile:
     json.dump(holder, outfile)

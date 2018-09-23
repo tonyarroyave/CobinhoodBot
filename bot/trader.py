@@ -16,12 +16,12 @@ import various_functions as vf
 import time
 
 # Wait for strategy
-print("waiting for strategy")
-time.sleep(15)
-print("let's continue...")
+#print("waiting for strategy")
+# time.sleep(15)
+#print("let's continue...")
 # Let's open our holder
 cup = 'cup_holder.json'
-with open(cup) as f:
+with open(cup, 'r') as f:
     holder = json.load(f)
 
 strategy = holder['strategy']

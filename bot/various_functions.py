@@ -7,7 +7,7 @@ import json
 
 def log_balances(BTC, USDT):
     j = 'balance.json'
-    with open(j) as f:
+    with open(j, 'r') as f:
         balances = json.load(f)
     balances['Actual-BTC'] = BTC
     balances['Actual-USDT'] = USDT
@@ -51,7 +51,7 @@ def log_order(data=[]):
 
 def get_PMs():
 
-    with open('parameters.json') as f:
+    with open('parameters.json', 'r') as f:
         params = json.load(f)
 
     actual_pm1 = params['PM1']
@@ -117,7 +117,7 @@ def surrounding_peek(PM1, Steps_PM1=1, Steps_PM2=2):
 
 def adjust_param():
 
-    with open('parameters.json') as f:
+    with open('parameters.json', 'r') as f:
         params = json.load(f)
 
     actual_pm1 = params['PM1']

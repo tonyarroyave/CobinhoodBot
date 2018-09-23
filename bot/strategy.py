@@ -18,7 +18,7 @@ def get_strategy(pm1, pm2, df):
 
 
 cup = 'cup_holder.json'
-with open(cup) as f:
+with open(cup, 'r') as f:
     holder = json.load(f)
 
 PM1, PM2 = vf.get_PMs()

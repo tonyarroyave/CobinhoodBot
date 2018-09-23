@@ -13,7 +13,12 @@ import json
 import API as Cobi
 import decimal
 import various_functions as vf
+import time
 
+# Wait for strategy
+print("waiting for strategy")
+time.sleep(15)
+print("let's continue...")
 # Let's open our holder
 cup = 'cup_holder.json'
 with open(cup) as f:

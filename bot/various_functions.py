@@ -87,18 +87,23 @@ def get_df():
         'unnamed', case=False)], axis=1, inplace=True)
     df.index = pd.to_datetime(df.index)
 
-    return df.last('31D').copy()
+    return df.last('18D').copy()
 
 
-def surrounding_peek(PM1, Steps_PM1=1, Steps_PM2=2):
+def surrounding_peek(PM1, Steps_PM1=1, Steps_PM2=1):
 
     Best_Stra = 0
     Best_PM1 = 0
     Best_PM2 = 0
-    Start_PM1 = PM1-20
-    Last_PM1 = PM1+20
+    Start_PM1 = PM1-100
+    Last_PM1 = PM1+100
     Start_PM2 = 1
     Last_PM2 = 1440
+
+    if Start_PM1 < 0:
+        Start_PM1 = 0
+    if Last_PM1 > 1440:
+        Last_PM1 = 1440
 
     df_M = get_df()
 
@@ -110,7 +115,7 @@ def surrounding_peek(PM1, Steps_PM1=1, Steps_PM2=2):
                     Best_Stra = Val_Stra[0]
                     Best_PM1 = pm1
                     Best_PM2 = pm2
-        print('\r{:.2f}%'.format(((pm1-Start_PM1+1)/41)*100), end='')
+        print('\r{:.2f}%'.format(((pm1-Start_PM1+1)/201)*100), end='')
     print('\r100%    ')
     return [Best_PM1, Best_PM2, Best_Stra]
 

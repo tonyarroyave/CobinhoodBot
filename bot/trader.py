@@ -37,10 +37,10 @@ if strategy == "long":
         # Here we should check if we are going to buy right after selling
         # But it will be added later on
         # Right now let's just make an order
-        print('Placing buy order...')
         quantity = decimal.Decimal(balance_USDT/float(price_BTC['price']))
         quantity_r = quantity.quantize(decimal.Decimal(
-            '.00000001'), rounding=decimal.ROUND_DOWN)
+            '.0001'), rounding=decimal.ROUND_DOWN)
+        print('Placing buy order for {} BTC'.format(quantity_r))
         order_response = Cobi.place_market_buy(
             Cobi.basic_trading_pairs_ids[0], quantity_r)
 

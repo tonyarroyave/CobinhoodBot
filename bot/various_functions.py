@@ -95,8 +95,8 @@ def surrounding_peek(PM1, Steps_PM1=1, Steps_PM2=1):
     Best_Stra = 0
     Best_PM1 = 0
     Best_PM2 = 0
-    Start_PM1 = PM1-100
-    Last_PM1 = PM1+100
+    Start_PM1 = PM1-50
+    Last_PM1 = PM1+50
     Start_PM2 = 1
     Last_PM2 = 1440
 
@@ -109,13 +109,13 @@ def surrounding_peek(PM1, Steps_PM1=1, Steps_PM2=1):
 
     for pm1 in np.arange(Start_PM1, Last_PM1, Steps_PM1):
         for pm2 in np.arange(Start_PM2, Last_PM2, Steps_PM2):
-            if (pm1 < pm2) and (pm1/pm2 > 0.35) and ((pm1+5) < pm2):
+            if (pm1 < pm2) and (pm1/pm2 > 0.35) and ((pm1+10) < pm2):
                 Val_Stra = get_acum(pm1, pm2, df_M.copy())
                 if (Val_Stra[0] > Best_Stra):
                     Best_Stra = Val_Stra[0]
                     Best_PM1 = pm1
                     Best_PM2 = pm2
-        print('\r{:.2f}%'.format(((pm1-Start_PM1+1)/201)*100), end='')
+        print('\r{:.2f}%'.format(((pm1-Start_PM1+1)/101)*100), end='')
     print('\r100%    ')
     return [Best_PM1, Best_PM2, Best_Stra]
 
